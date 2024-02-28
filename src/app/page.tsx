@@ -1,7 +1,14 @@
 import style from "@/app/styles/style.module.css";
 import Link from "next/link";
 
-export default function Home() {
+const getTOdoList = async () => {
+  const res = await fetch("https://jsonplaceholder.typicode.com/todos");
+  return res.json();
+};
+
+export default async function Home() {
+  const res = await getTOdoList();
+  console.log(res);
   return (
     <>
       <h1>첫페이지</h1>
