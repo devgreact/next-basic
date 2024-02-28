@@ -1,0 +1,13 @@
+.list {
+  position: relative;
+  display: block;
+  width: 80%;
+  margin: 0 auto;
+  background-color: skyblue;
+}
+.list li {
+  font-size: 18px;
+}
+.list li:hover a {
+  color: #ff0000;
+}

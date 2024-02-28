@@ -1,8 +1,7 @@
-// app/basic/[id]/page.tsx
 import React from "react";
 
 const page = () => {
-  return <div>페이지이지롱</div>;
+  return <div>page</div>;
 };
 
 export default page;

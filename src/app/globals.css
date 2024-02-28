@@ -1,3 +1,33 @@
 /* @tailwind base;
 @tailwind components;
 @tailwind utilities; */
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  outline-style: none;
+}
+ul,
+li {
+  list-style: none;
+}
+a {
+  color: #000;
+  text-decoration: none;
+}
+html {
+  font-size: 12px;
+}
+body {
+}
+
+button {
+  border: none;
+  cursor: pointer;
+  border-radius: 4px;
+  font-size: 8px;
+  padding: 4px 8px;
+  background-color: hotpink;
+  color: #fff;
+}

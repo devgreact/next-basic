@@ -1,89 +1,394 @@
-# Next.js
+# Next.js 기초 연습
 
-## 1. Next.js 기본 상식
+## 기본 정리
 
-### 1.1. App Router 채용
+- app/page.tsx
+  : 루트 페이지
+  : http://localhost:3000/
 
-    : 파일 시스템 라우터
-    : /src/app/test 폴더생성 / page.tsx 파일생성
-    ```ts
-    // app/basic/page.tsx
+  ```tsx
+  export default function Home() {
+    return (
+      <>
+        <h1>첫페이지</h1>
+        <ul>
+          <li>대구</li>
+          <li>부산</li>
+          <li>대전</li>
+          <li>광주</li>
+          <li>서울</li>
+        </ul>
+      </>
+    );
+  }
+  ```
+
+- app/detail 폴더 / page.tsx 파일생성
+  : http://localhost:3000/detail
+
+  ```tsx
+  import React from "react";
+  const page = () => {
+    return <div>page</div>;
+  };
+
+  export default page;
+  ```
+
+  - app/detail/[city] 폴더생성 page.tsx 파일생성
+    : http://localhost:3000/detail/daegu
+    : http://localhost:3000/detail/busan
+    : http://localhost:3000/detail/daegun
+    : http://localhost:3000/detail/gwangju
+    : http://localhost:3000/detail/seoul
+    : http://localhost:3000/detail/jeju
+
+    ```tsx
     import React from "react";
+    // 아.. 어렵다.
+    type Props = {
+      params: {
+        city: string;
+      };
+    };
 
-    const page = () => {
-    return <div>베이직 페이지</div>;
+    const page = ({ params }: Props) => {
+      return <div>상세내용 : {params.city}</div>;
     };
 
     export default page;
-
     ```
 
-    : /src/app/basic 폴더생성 / page.tsx 파일생성
     ```ts
-    // app/test/page.tsx
     import React from "react";
+    // 아.. 어렵다.
+    type Props = {
+      params: {
+        city: string;
+      };
+    };
 
-    const page = () => {
-    return <div>테스트 페이지</div>;
+    const page = ({ params }: Props) => {
+      const cityName = params.city === "daegu" ? "대구" : "";
+      return <div>상세내용 : {cityName}</div>;
     };
 
     export default page;
     ```
 
-### 1.2. RSC 가 Next.js 기본 컴포넌트
+- 동적 라우팅 적용
 
-- React Server Component
-- React 18 버전
-- 서버에서 만드므로 보안
-- 서버에서 만드므로 속도 (API 연동)
-- 서버에서 만드므로 캐싱이 기본
-- yarn buil 시 압축을 하므로 용량 감소
-- use 즉, Hook 사용못함, 이벤트 핸들러 사용 못함.
+  ```tsx
+  import Link from "next/link";
 
-### 1.3. Client Component 가 Next.js 기본 컴포넌트
+  export default function Home() {
+    return (
+      <>
+        <h1>첫페이지</h1>
+        <ul>
+          <li>
+            <Link href="/detail/daegu">대구</Link>
+          </li>
+          <li>
+            <Link href="/detail/busan">부산</Link>
+          </li>
+          <li>
+            <Link href="/detail/daegun">대전</Link>
+          </li>
+          <li>
+            <Link href="/detail/gwangju">광주</Link>
+          </li>
+          <li>
+            <Link href="/detail/seoul">서울</Link>
+          </li>
+          <li>
+            <Link href="/detail/jeju">서울</Link>
+          </li>
+        </ul>
+      </>
+    );
+  }
+  ```
 
-- 'use client' 작성하면 Hook 사용, 이벤트 핸들러도 가능
+- 정적 라우팅 적용
 
-### 1.4. 라우팅 자동 지원
+```tsx
+import Link from "next/link";
+import React from "react";
+// 아.. 어렵다.
+type Props = {
+  params: {
+    city: string;
+  };
+};
 
-- App Router 방식이므로 보여줄 페이지들은 반드시 app/ 폴더에 생성
-- 웹 브라우저 URL형식에 맞게 /app/폴더생성
-- 정적경로(Static Router)
-- 사용하는 파일 명이 미리 약속이 되어있다.
-  : [파일명참조](https://nextjs.org/docs/getting-started/project-structure)
-  : http://localhost:3000/board/
-  : /app/board/page.tsx 실행
+const page = ({ params }: Props) => {
+  const cityName = params.city === "daegu" ? "대구" : params.city;
+  return (
+    <>
+      <div>상세내용 : {cityName}</div>
+      <Link href="/">이전페이지</Link>
+    </>
+  );
+};
 
-- 동적 경로(Dynamic Router)
-  : http://localhost:3000/board/[aaa] 폴더명 / page.tsx
-  : http://localhost:3000/board/1
-  : http://localhost:3000/board/100
+export default page;
+```
 
-### 1.5. 페이지이동
+- 참고사항
+  : console.log 활용시 터미널 및 F12 console 탭참조
 
-- Link 라이브러리 내장.
-- useRouter : 버튼/실행결과로 페이지 이동('use client')
+- useRouter 활용하기
+  : use 는 hook 입니다.
+  : 이벤트 핸들러 활용
+  : 필수로 클라이언트 컴포넌트라고 명시
+  : `"use client"` (React 18버전)
 
-### 1.6. CSS
+  ```ts
+  "use client";
 
-- css
-- CSS-IN-JS : styled, emotion
-- 파일명.module.css
-- scss
+  import { useRouter } from "next/navigation";
+  // import Link from "next/link";
+  import React from "react";
 
-### 1.7. API 백엔드 데이터 패칭
+  // function ( parameter: 데이터 종류)
+  // 1. const page = (받은값:Props) => {
 
-- React Query 와 비슷하게 처리 (revalitdate : 재검증)
-- Next.js 내부적으로 Fetch API 제공
+  // function ( {속성:값}: 데이터 종류)
+  // 2. const page = ({속성:값}:Props) => {
 
-### 1.8. Metadata 제공
+  // 약속된 속성명 params
+  // 3. const page = ({params:params}:Props) => {
 
-- SEO 지원 (미리 html 만들기 때문에 검색엔진 html 노출)
-- 정적 Metadata 객체 생성 및 적용
-- 동적 Metadata 객체 생성 및 적용
+  // 축약형 적용
+  // 4. const page = ({params}:Props) => {
+  // type Props = {
+  // // 키명 : {속성:값종류};
+  // // params : {속성:값종류};
+  // // params : {city:값종류};
+  // // params: { city: string };
+  // };
 
-### 1.9. 배포
+  type Props = {
+    params: {
+      city: string;
+    };
+  };
 
-- Server 가 있어야 합니다.
-- Node.js 버전을 맞추어야 함.
-- 환경설정 파일을 셋팅
+  const Detail = ({ params }: Props) => {
+  const cityName = params.city === "daegu" ? "대구" : params.city;
+  // 첫 페이지로 이동
+  // 주의사항 : react-router-dom (X)
+  // import { useRouter } from "next/navigation";
+  const router = useRouter();
+  const handleClick = () => {
+  console.log("첫페이지로");
+  router.push("/");
+  };
+  return (
+    <>
+      <div>상세내용 : {cityName}</div>
+      {/_ <Link href="/">이전페이지</Link> _/}
+      <button onClick={() => handleClick()}>이전으로</button>
+    </>
+  );
+  };
+
+  export default Detail;
+  ```
+
+- 버튼을 컴포넌트로 만들기
+  : 이유는 Next.js 는 client component 는 컴포넌트 만들길 추천
+  : "use client" 사용한 것은 가능하면 컴포넌트로 뽑기를 원합니다.
+  : /app/components/폴더생성
+  : /app/components/HomeButton.tsx 생성
+
+  ```ts
+  "use client";
+  import { useRouter } from "next/navigation";
+  import React from "react";
+
+  const HomeButton = () => {
+    // 첫 페이지로 이동
+    // 주의사항 : react-router-dom (X)
+    // import { useRouter } from "next/navigation";
+    const router = useRouter();
+    const handleClick = () => {
+      console.log("첫페이지로");
+      router.push("/");
+    };
+    return <button onClick={() => handleClick()}>이전으로</button>;
+  };
+
+  export default HomeButton;
+  ```
+
+  ```ts
+  // "use client";
+  import HomeButton from "@/app/components/HomeButton";
+  // import Link from "next/link";
+
+  // function ( parameter: 데이터 종류)
+  // 1. const page = (받은값:Props) => {
+
+  // function ( {속성:값}: 데이터 종류)
+  // 2. const page = ({속성:값}:Props) => {
+
+  // 약속된 속성명 params
+  // 3. const page = ({params:params}:Props) => {
+
+  // 축약형 적용
+  // 4. const page = ({params}:Props) => {
+  // type Props = {
+  //   // 키명 : {속성:값종류};
+  //   // params : {속성:값종류};
+  //   // params : {city:값종류};
+  //   // params: { city: string };
+  // };
+
+  type Props = {
+    params: {
+      city: string;
+    };
+  };
+
+  const Detail = ({ params }: Props) => {
+    const cityName = params.city === "daegu" ? "대구" : params.city;
+    return (
+      <>
+        <div>상세내용 : {cityName}</div>
+        {/* <Link href="/">이전페이지</Link> */}
+        {/* <button onClick={() => handleClick()}>이전으로</button> */}
+        <HomeButton />
+      </>
+    );
+  };
+
+  export default Detail;
+  ```
+
+- Next.js 의 기본 컴포넌트는 서버 컴포넌트 이다.
+  : use 류의 hook 과 이벤트 핸들러가 포함된 컴포넌트는 배치용으로 제작
+  : 서버 컴포넌트에 import 해서 쓴다.
+  : 반대는 안됩니다. (클라이언트 컴포넌트에 서버컴포넌트를 배치하며 오류발생)
+
+- css 작업 해보기
+  : global.css 에 기본 내용을 작성(앱 전체에 영향을 줌)
+  : 파일명은 자유입니다.
+  : 전역 기본 css 적용하기
+  : 기본레이아웃은 layout.tsx 에 작성하면 적용.
+  : next.js 는 레이아웃을 담당하는 파일
+  : layout.tsx 에 적용 (import "./globals.css")
+
+  ```css
+  /* @tailwind base;
+  @tailwind components;
+  @tailwind utilities; */
+
+  * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    outline-style: none;
+  }
+  ul,
+  li {
+    list-style: none;
+  }
+  a {
+    color: #000;
+    text-decoration: none;
+  }
+  html {
+    font-size: 12px;
+  }
+  body {
+  }
+  button {
+    border: none;
+    cursor: pointer;
+    border-radius: 4px;
+    font-size: 8px;
+    padding: 4px 8px;
+    background-color: hotpink;
+    color: #fff;
+  }
+  ```
+
+- 파일명.module.css 활용
+  : 확장자는 .module.css
+  : 지역 css 적용
+  : 다른 css 와의 충돌을 제거하고 우선적 적용
+  : 적용 후 실행하면 랜덤(유일)한 class 명을 생성
+  : css 동일한 이름에 의한 문제가 발생되지 않는다.
+  : /app/styles 폴더 만들기 / detail.module.css 생성
+
+  ```css
+  .detailTitle {
+    color: #ff0000;
+    font-weight: 900;
+    font-size: 20px;
+  }
+  ```
+
+  ```ts
+  // @은 /src 를 가르키는 절대 경로입니다.
+  import style from "@/app/styles/detail.module.css";
+  // js 처럼 작성해야 해요.
+  <div className={style.detailTitle}>상세내용 : {cityName}</div>;
+  ```
+
+  : /app/page.tsx 에 파일명.module.css 적용해 보기
+  : /app/styles/style.module.css 생성
+  : Link 는 a 태그로 치환됨.
+
+  ```css
+  .list {
+    position: relative;
+    display: block;
+    width: 80%;
+    margin: 0 auto;
+    background-color: skyblue;
+  }
+  .list li {
+    font-size: 18px;
+  }
+  .list li:hover a {
+    color: #ff0000;
+  }
+  ```
+
+  ```tsx
+  import style from "@/app/styles/style.module.css";
+  import Link from "next/link";
+
+  export default function Home() {
+    return (
+      <>
+        <h1>첫페이지</h1>
+        <ul className={style.list}>
+          <li>
+            <Link href="/detail/daegu">대구</Link>
+          </li>
+          <li>
+            <Link href="/detail/busan">부산</Link>
+          </li>
+          <li>
+            <Link href="/detail/daegun">대전</Link>
+          </li>
+          <li>
+            <Link href="/detail/gwangju">광주</Link>
+          </li>
+          <li>
+            <Link href="/detail/seoul">서울</Link>
+          </li>
+          <li>
+            <Link href="/detail/jeju">서울</Link>
+          </li>
+        </ul>
+      </>
+    );
+  }
+  ```
+
+- API 서버 연동
